@@ -11,6 +11,8 @@ const startStopBtn = document.getElementById('startStop');
 const recordBtn = document.getElementById('recordButton');
 const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
+const repeatBtn = document.getElementById('repeatButton');
+let lastAssistantText = '';
 
 startStopBtn.addEventListener('click', () => {
   if (!running) {
@@ -25,6 +27,13 @@ recordBtn.addEventListener('click', () => {
     startRecording();
   } else {
     stopRecording();
+  }
+});
+
+repeatBtn.addEventListener('click', async () => {
+  const apiKey = apiKeyInput.value.trim();
+  if (lastAssistantText && apiKey) {
+    await speakAssistantText(apiKey, lastAssistantText);
   }
 });
 
@@ -43,6 +52,8 @@ async function startConversation() {
   running = true;
   startStopBtn.textContent = 'Stop';
   transcriptDiv.textContent = '';
+  repeatBtn.disabled = true;
+  lastAssistantText = '';
   conversation = [
     { role: 'system', content: systemPrompt },
     { role: 'user', content: scenarioInput.value.trim() }
@@ -58,6 +69,7 @@ function stopConversation() {
   }
   startStopBtn.textContent = 'Go';
   recordBtn.disabled = true;
+  repeatBtn.disabled = true;
   console.log('Conversation stopped');
 }
 
@@ -124,6 +136,8 @@ async function getAssistantResponse(apiKey) {
   const assistantText = chatData.choices[0].message.content;
   conversation.push({ role: 'assistant', content: assistantText });
   transcriptDiv.textContent += `\nTeacher: ${assistantText}`;
+  lastAssistantText = assistantText;
+  repeatBtn.disabled = false;
   console.log('Assistant:', assistantText);
   await speakAssistantText(apiKey, assistantText);
 }
