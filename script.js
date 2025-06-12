@@ -11,6 +11,8 @@ const startStopBtn = document.getElementById('startStop');
 const talkBtn = document.getElementById('talkButton');
 const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
+const repeatBtn = document.getElementById('repeatButton');
+let lastAssistantText = '';
 
 function scrollTranscriptToBottom() {
   transcriptDiv.scrollTop = transcriptDiv.scrollHeight;
@@ -67,6 +69,13 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
+repeatBtn.addEventListener('click', async () => {
+  const apiKey = apiKeyInput.value.trim();
+  if (lastAssistantText && apiKey) {
+    await speakAssistantText(apiKey, lastAssistantText);
+  }
+});
+
 ttsAudio.addEventListener('ended', () => {
   if (running) {
     talkBtn.disabled = false;
@@ -99,6 +108,7 @@ function stopConversation() {
     mediaRecorder.stop();
   }
   startStopBtn.textContent = 'Go';
+  repeatBtn.disabled = true;
   talkBtn.disabled = true;
   talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
   console.log('Conversation stopped');
@@ -169,6 +179,8 @@ async function getAssistantResponse(apiKey) {
   const assistantText = chatData.choices[0].message.content;
   conversation.push({ role: 'assistant', content: assistantText });
   transcriptDiv.textContent += `\nTeacher: ${assistantText}`;
+  lastAssistantText = assistantText;
+  repeatBtn.disabled = false;
   scrollTranscriptToBottom();
   console.log('Assistant:', assistantText);
   await speakAssistantText(apiKey, assistantText);
