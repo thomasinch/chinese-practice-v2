@@ -244,7 +244,7 @@ async function getAssistantResponse(apiKey) {
     })
   });
   const chatData = await chatResponse.json();
-  const assistantText = chatData.choices[0].message.content;
+  const assistantText = toSimplified(chatData.choices[0].message.content);
   conversation.push({ role: 'assistant', content: assistantText });
   transcriptDiv.textContent += `\n老师: ${assistantText}`;
   lastAssistantText = assistantText;
