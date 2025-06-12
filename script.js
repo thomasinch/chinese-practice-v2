@@ -12,6 +12,10 @@ const recordBtn = document.getElementById('recordButton');
 const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
 
+function scrollTranscriptToBottom() {
+  transcriptDiv.scrollTop = transcriptDiv.scrollHeight;
+}
+
 startStopBtn.addEventListener('click', () => {
   if (!running) {
     startConversation();
@@ -104,6 +108,7 @@ async function sendUserAudio(blob) {
   const userText = sttData.text;
   conversation.push({ role: 'user', content: userText });
   transcriptDiv.textContent += `\nYou: ${userText}`;
+  scrollTranscriptToBottom();
   console.log('User said:', userText);
   await getAssistantResponse(apiKey);
 }
@@ -124,6 +129,7 @@ async function getAssistantResponse(apiKey) {
   const assistantText = chatData.choices[0].message.content;
   conversation.push({ role: 'assistant', content: assistantText });
   transcriptDiv.textContent += `\nTeacher: ${assistantText}`;
+  scrollTranscriptToBottom();
   console.log('Assistant:', assistantText);
   await speakAssistantText(apiKey, assistantText);
 }
