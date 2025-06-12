@@ -12,3 +12,4 @@ A single-page webapp (`index.html`) lets you practice Chinese conversation using
 4. Click **Stop** at any time to end the conversation.
 
 All requests are made directly from the browser, so your API key is never sent anywhere except the OpenAI API.
+Your key is saved in your browser's localStorage so it will be there next time you open the page.

@@ -6,15 +6,33 @@
 <title>Chinese Conversation Practice</title>
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
-#transcript { border: 1px solid #ccc; padding: 10px; height: 200px; width: 100%; overflow-y: auto; white-space: pre-wrap; position: relative; }
-#recordButton { margin-left: 10px; }
-#repeatButton {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  border-radius: 50%;
-  padding: 6px 10px;
+
+#transcript {
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 200px;
+  width: 100%;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-size: 1.5em;
+  position: relative;
 }
+
+#talkButton {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 12px;
+  margin-top: 10px;
+}
+#talkButton.holding {
+  background-color: #45A049;
+  transform: scale(0.95);
+}
+
 </style>
 </head>
 <body>
@@ -22,10 +40,12 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 <label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
 <textarea id="scenario" rows="3" cols="60" placeholder="Describe your practice scenario here..."></textarea><br>
 <button id="startStop">Go</button>
-<button id="recordButton" disabled>Record</button>
+
 <div id="transcript">
   <button id="repeatButton" disabled>请再说一次</button>
 </div>
+<button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
+
 <audio id="ttsAudio"></audio>
 <script src="script.js"></script>
 </body>
