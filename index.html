@@ -1,12 +1,15 @@
 <!DOCTYPE html>
+<!-- Main page for the conversation app -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chinese Conversation Practice</title>
+<!-- Basic styling -->
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
 
+/* conversation transcript box */
 #transcript {
   border: 1px solid #ccc;
   padding: 10px;
@@ -19,6 +22,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 }
 
 #talkButton {
+  /* record button style */
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -29,6 +33,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
   margin-top: 10px;
 }
 #talkButton.holding {
+  /* button pressed state */
   background-color: #45A049;
   transform: scale(0.95);
 }
@@ -38,6 +43,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 <body>
 <h1>Chinese Conversation Practice</h1>
 <label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
+<!-- practice scenario description -->
 <textarea id="scenario" rows="3" cols="60" placeholder="Describe your practice scenario here...
 - Ordering food at a restaurant
 - Shopping at a store or market
@@ -59,11 +65,15 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 - Explaining a personal emergency or health issue
 - Booking tickets
 - Asking for recommendations"></textarea><br>
+<!-- start or end the session -->
 <button id="startStop">Go</button>
 
+<!-- conversation transcript -->
 <div id="transcript">
+  <!-- replay last teacher reply -->
   <button id="repeatButton" disabled>请再说一次</button>
 </div>
+<!-- hold to record your voice -->
 <button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
 
 <audio id="ttsAudio"></audio>
