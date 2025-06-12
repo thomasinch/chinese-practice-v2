@@ -37,6 +37,8 @@ apiKeyInput.addEventListener('input', () => {
 
 // start or stop the conversation
 startStopBtn.addEventListener('click', () => {
+  // remove focus so holding Space doesn't trigger another click
+  startStopBtn.blur();
   if (!running) {
     startConversation();
   } else {
