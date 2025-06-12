@@ -32,6 +32,18 @@ body { font-family: Arial, sans-serif; margin: 20px; }
   font-size: 12px;
   margin-top: 10px;
 }
+#repeatButton {
+  /* repeat button style */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background-color: #2196F3;
+  color: white;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
 #talkButton.holding {
   /* button pressed state */
   background-color: #45A049;
@@ -69,10 +81,9 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 <button id="startStop">Go</button>
 
 <!-- conversation transcript -->
-<div id="transcript">
-  <!-- replay last teacher reply -->
-  <button id="repeatButton" disabled>请再说一次</button>
-</div>
+<div id="transcript"></div>
+<!-- replay last teacher reply -->
+<button id="repeatButton" disabled>请再说一次</button>
 <!-- hold to record your voice -->
 <button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
 
