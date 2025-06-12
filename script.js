@@ -94,6 +94,7 @@ ttsAudio.addEventListener('ended', () => {
   if (running) {
     talkBtn.disabled = false;
     talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
+    repeatBtn.disabled = false;
   }
 });
 
@@ -107,6 +108,7 @@ async function startConversation() {
   running = true;
   startStopBtn.textContent = 'Stop';
   transcriptDiv.textContent = '';
+  repeatBtn.disabled = true;
   talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
   talkBtn.disabled = true;
   conversation = [
@@ -210,6 +212,7 @@ async function getAssistantResponse(apiKey) {
 async function speakAssistantText(apiKey, text) {
   talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
   talkBtn.disabled = true;
+  repeatBtn.disabled = true;
   const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
     headers: {
