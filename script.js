@@ -21,6 +21,8 @@ const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
 const repeatBtn = document.getElementById('repeatButton');
 const translateBtn = document.getElementById('translateButton');
+const headerBox = document.getElementById('headerBox');
+const toggleHeader = document.getElementById('toggleHeader');
 let lastAssistantText = '';
 
 // keep transcript scrolled to bottom
@@ -37,6 +39,12 @@ if (savedKey) {
 // Save API key whenever it changes
 apiKeyInput.addEventListener('input', () => {
   localStorage.setItem('openai_api_key', apiKeyInput.value);
+});
+
+// show or hide the header box
+toggleHeader.addEventListener('click', () => {
+  headerBox.classList.toggle('collapsed');
+  toggleHeader.textContent = headerBox.classList.contains('collapsed') ? '▼' : '▲';
 });
 
 // start or stop the conversation
@@ -139,6 +147,8 @@ async function startConversation() {
   }
   running = true;
   startStopBtn.textContent = 'Stop';
+  headerBox.classList.add('collapsed');
+  toggleHeader.textContent = '▼';
   transcriptDiv.textContent = '';
   repeatBtn.disabled = true;
   translateBtn.disabled = true;
@@ -159,6 +169,8 @@ function stopConversation() {
     mediaRecorder.stop();
   }
   startStopBtn.textContent = 'Go';
+  headerBox.classList.remove('collapsed');
+  toggleHeader.textContent = '▲';
   repeatBtn.disabled = true;
   translateBtn.disabled = true;
   talkBtn.disabled = true;
