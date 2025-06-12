@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<!-- Main page for the conversation app -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chinese Conversation Practice</title>
-<!-- Basic styling -->
 <style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-
-/* conversation transcript box */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+#main {
+  display: flex;
+  flex-direction: column;
+}
 #transcript {
   border: 1px solid #ccc;
   padding: 10px;
@@ -20,101 +24,60 @@ body { font-family: Arial, sans-serif; margin: 20px; }
   font-size: 1.5em;
   position: relative;
 }
-
-#talkButton {
-  /* record button style */
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+#talkButton, #repeatButton, #translateButton {
   border: none;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 12px;
-  margin-top: 10px;
+  border-radius: 20px;
+  font-size: 1.2em;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
 }
-#repeatButton {
-  /* repeat button style */
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: none;
-  background-color: #2196F3;
-  color: white;
-  font-size: 12px;
-  margin-top: 10px;
-  margin-right: 10px;
-}
-#translateButton {
-  /* english button style */
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: none;
-  background-color: #FFEB3B;
-  color: black;
-  font-size: 12px;
-  margin-top: 10px;
-  margin-left: 10px;
-}
-#repeatButton:disabled {
+#talkButton { background-color: #4CAF50; color: white; }
+#repeatButton { background-color: #2196F3; color: white; margin-right: 10px; }
+#translateButton { background-color: #FFEB3B; color: black; margin-left: 10px; }
+#repeatButton:disabled, #translateButton:disabled {
   background-color: grey;
 }
-#repeatButton:active, #translateButton:active {
-  transform: scale(0.95);
-}
-#controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
 #talkButton.holding {
-  /* button pressed state */
   background-color: #45A049;
   transform: scale(0.95);
 }
-
+#controls { margin-top: 10px; }
+body.running #transcript { height: 50vh; }
+body.running #controls {
+  height: 50vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+body.running #talkButton,
+body.running #repeatButton,
+body.running #translateButton {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+body.running #talkButton { grid-row: 1 / 3; grid-column: 1; }
+body.running #repeatButton { grid-row: 1; grid-column: 2; }
+body.running #translateButton { grid-row: 2; grid-column: 2; }
 </style>
 </head>
 <body>
-<h1>Chinese Conversation Practice</h1>
-<label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
-<!-- practice scenario description -->
-<textarea id="scenario" rows="3" cols="60" placeholder="Describe your practice scenario here...
-- Ordering food at a restaurant
-- Shopping at a store or market
-- Asking for directions
-- Taking a taxi or ride share
-- Using public transportation
-- Checking into a hotel or Airbnb
-- Going to a doctor or pharmacy
-- Talking with a landlord or about your apartment
-- Paying bills or using mobile payment apps
-- Small talk with neighbors or locals
-- Introducing yourself and exchanging contact info
-- Making or declining plans with friends
-- Talking about your job or studies
-- Asking someone for help or clarification
-- Making a phone call
-- Reporting something lost or stolen
-- Handling a misunderstanding or disagreement
-- Explaining a personal emergency or health issue
-- Booking tickets
-- Asking for recommendations"></textarea><br>
-<!-- start or end the session -->
-<button id="startStop">Go</button>
-
-<!-- conversation transcript -->
-<div id="transcript"></div>
-<div id="controls">
-  <!-- hold to record your voice -->
-  <button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
-  <!-- replay last teacher reply -->
-  <button id="repeatButton" disabled>请再说一次</button>
-  <!-- show english translation -->
-  <button id="translateButton" disabled>看看英文</button>
+<details id="setup" open>
+  <summary>Chinese Conversation Practice</summary>
+  <label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
+  <textarea id="scenario" rows="3" cols="60" placeholder="Describe your practice scenario here..."></textarea><br>
+  <button id="startStop">Go</button>
+</details>
+<div id="main">
+  <div id="transcript"></div>
+  <div id="controls">
+    <button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
+    <button id="repeatButton" disabled>请再说一次</button>
+    <button id="translateButton" disabled>看看英文</button>
+  </div>
 </div>
-
 <audio id="ttsAudio"></audio>
 <script src="https://unpkg.com/opencc-js@1.0.5/dist/browser.min.js"></script>
 <script src="script.js"></script>

@@ -22,6 +22,7 @@ const ttsAudio = document.getElementById('ttsAudio');
 const repeatBtn = document.getElementById('repeatButton');
 const translateBtn = document.getElementById('translateButton');
 let lastAssistantText = '';
+let translateUsed = false;
 
 // keep transcript scrolled to bottom
 function scrollTranscriptToBottom() {
@@ -97,6 +98,7 @@ repeatBtn.addEventListener('click', async () => {
 
 // translate last teacher reply when clicked
 translateBtn.addEventListener('click', async () => {
+  if (translateUsed) return;
   const apiKey = apiKeyInput.value.trim();
   if (lastAssistantText && apiKey) {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -117,6 +119,8 @@ translateBtn.addEventListener('click', async () => {
     const eng = data.choices[0].message.content.trim();
     transcriptDiv.textContent += ` (${eng})`;
     scrollTranscriptToBottom();
+    translateUsed = true;
+    translateBtn.disabled = true;
   }
 });
 
@@ -127,6 +131,7 @@ ttsAudio.addEventListener('ended', () => {
     talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
     repeatBtn.disabled = false;
     translateBtn.disabled = false;
+    translateUsed = false;
   }
 });
 
@@ -138,6 +143,8 @@ async function startConversation() {
     return;
   }
   running = true;
+  document.getElementById('setup').open = false;
+  document.body.classList.add('running');
   startStopBtn.textContent = 'Stop';
   transcriptDiv.textContent = '';
   repeatBtn.disabled = true;
@@ -158,6 +165,8 @@ function stopConversation() {
   if (recording) {
     mediaRecorder.stop();
   }
+  document.getElementById('setup').open = true;
+  document.body.classList.remove('running');
   startStopBtn.textContent = 'Go';
   repeatBtn.disabled = true;
   translateBtn.disabled = true;
