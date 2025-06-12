@@ -180,7 +180,7 @@ async function sendUserAudio(blob) {
   const sttData = await sttResponse.json();
   const userText = sttData.text;
   conversation.push({ role: 'user', content: userText });
-  transcriptDiv.textContent += `\nYou: ${userText}`;
+  transcriptDiv.textContent += `\n我: ${userText}`;
   scrollTranscriptToBottom();
   console.log('User said:', userText);
   await getAssistantResponse(apiKey);
@@ -202,7 +202,7 @@ async function getAssistantResponse(apiKey) {
   const chatData = await chatResponse.json();
   const assistantText = chatData.choices[0].message.content;
   conversation.push({ role: 'assistant', content: assistantText });
-  transcriptDiv.textContent += `\nTeacher: ${assistantText}`;
+  transcriptDiv.textContent += `\n老师: ${assistantText}`;
   lastAssistantText = assistantText;
   repeatBtn.disabled = false;
   scrollTranscriptToBottom();
