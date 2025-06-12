@@ -9,16 +9,47 @@
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
 
+  /* floating header box */
+  #headerBox {
+    position: fixed;
+    top: 40px;
+    left: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 100;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  #headerBox.collapsed {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  #toggleHeader {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    z-index: 150;
+  }
+
 /* conversation transcript box */
 #transcript {
   border: 1px solid #ccc;
   padding: 10px;
-  height: 200px;
+  height: 50vh;
   width: 100%;
   overflow-y: auto;
   white-space: pre-wrap;
   font-size: 1.5em;
   position: relative;
+  box-sizing: border-box;
+  margin-top: 40px;
 }
 
 #talkButton {
@@ -77,6 +108,8 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 </style>
 </head>
 <body>
+<div id="toggleHeader">▲</div>
+<div id="headerBox">
 <h1>Chinese Conversation Practice</h1>
 <label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
 <!-- practice scenario description -->
@@ -103,6 +136,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 - Asking for recommendations"></textarea><br>
 <!-- start or end the session -->
 <button id="startStop">Go</button>
+</div>
 
 <!-- conversation transcript -->
 <div id="transcript"></div>
