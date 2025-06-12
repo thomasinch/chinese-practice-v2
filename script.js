@@ -12,6 +12,17 @@ const recordBtn = document.getElementById('recordButton');
 const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
 
+// Load stored API key if present
+const savedKey = localStorage.getItem('openai_api_key');
+if (savedKey) {
+  apiKeyInput.value = savedKey;
+}
+
+// Save API key whenever it changes
+apiKeyInput.addEventListener('input', () => {
+  localStorage.setItem('openai_api_key', apiKeyInput.value);
+});
+
 startStopBtn.addEventListener('click', () => {
   if (!running) {
     startConversation();
