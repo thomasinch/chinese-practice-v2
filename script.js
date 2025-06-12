@@ -1,10 +1,15 @@
+// conversation history
 let conversation = [];
+// recorder objects
 let mediaRecorder;
 let audioChunks = [];
+// flags for UI state
 let running = false;
 let recording = false;
+// instructions sent to the assistant
 const systemPrompt = `You are a friendly Chinese teacher named 小王. Hold conversational practice with the learner:\n- Speak mostly Mandarin Chinese, sprinkling English only when necessary for comprehension.\n- Subtly correct grammar, vocabulary and pronunciation after each learner utterance.\n- If the learner says "word是什么？", give the English meaning.\n- If learner asks about a grammar structure, explain briefly in English followed by a Chinese example.\n- Begin now with the scenario the learner provided.`;
 
+// grab page elements
 const apiKeyInput = document.getElementById('apiKey');
 const scenarioInput = document.getElementById('scenario');
 const startStopBtn = document.getElementById('startStop');
@@ -14,6 +19,7 @@ const ttsAudio = document.getElementById('ttsAudio');
 const repeatBtn = document.getElementById('repeatButton');
 let lastAssistantText = '';
 
+// keep transcript scrolled to bottom
 function scrollTranscriptToBottom() {
   transcriptDiv.scrollTop = transcriptDiv.scrollHeight;
 }
@@ -29,6 +35,7 @@ apiKeyInput.addEventListener('input', () => {
   localStorage.setItem('openai_api_key', apiKeyInput.value);
 });
 
+// start or stop the conversation
 startStopBtn.addEventListener('click', () => {
   if (!running) {
     startConversation();
@@ -37,24 +44,28 @@ startStopBtn.addEventListener('click', () => {
   }
 });
 
+// begin recording when holding the button
 talkBtn.addEventListener('pointerdown', (e) => {
   if (!talkBtn.disabled && !recording) {
     startRecording();
   }
 });
 
+// stop recording when released
 talkBtn.addEventListener('pointerup', (e) => {
   if (recording) {
     stopRecording();
   }
 });
 
+// cancel if pointer leaves button
 talkBtn.addEventListener('pointerleave', (e) => {
   if (recording) {
     stopRecording();
   }
 });
 
+// allow recording with spacebar
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && !talkBtn.disabled && !recording) {
     e.preventDefault();
@@ -62,6 +73,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// stop recording when spacebar released
 document.addEventListener('keyup', (e) => {
   if (e.code === 'Space' && recording) {
     e.preventDefault();
@@ -69,6 +81,7 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
+// speak again when repeat button clicked
 repeatBtn.addEventListener('click', async () => {
   const apiKey = apiKeyInput.value.trim();
   if (lastAssistantText && apiKey) {
@@ -76,6 +89,7 @@ repeatBtn.addEventListener('click', async () => {
   }
 });
 
+// enable mic after audio playback
 ttsAudio.addEventListener('ended', () => {
   if (running) {
     talkBtn.disabled = false;
@@ -83,6 +97,7 @@ ttsAudio.addEventListener('ended', () => {
   }
 });
 
+// begin a new chat session
 async function startConversation() {
   const apiKey = apiKeyInput.value.trim();
   if (!apiKey) {
@@ -102,6 +117,7 @@ async function startConversation() {
   await getAssistantResponse(apiKey);
 }
 
+// reset UI and stop any recording
 function stopConversation() {
   running = false;
   if (recording) {
@@ -114,6 +130,7 @@ function stopConversation() {
   console.log('Conversation stopped');
 }
 
+// start capturing microphone input
 async function startRecording() {
   if (!running) return;
   talkBtn.textContent = '现在讲 (Speak now)';
@@ -134,6 +151,7 @@ async function startRecording() {
   });
 }
 
+// finish the current recording
 function stopRecording() {
   if (!recording) return;
   talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
@@ -143,6 +161,7 @@ function stopRecording() {
   talkBtn.disabled = true;
 }
 
+// transcribe audio then ask GPT
 async function sendUserAudio(blob) {
   const apiKey = apiKeyInput.value.trim();
   const formData = new FormData();
@@ -163,6 +182,7 @@ async function sendUserAudio(blob) {
   await getAssistantResponse(apiKey);
 }
 
+// call chat completion and handle reply
 async function getAssistantResponse(apiKey) {
   const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -186,6 +206,7 @@ async function getAssistantResponse(apiKey) {
   await speakAssistantText(apiKey, assistantText);
 }
 
+// use OpenAI TTS to read reply aloud
 async function speakAssistantText(apiKey, text) {
   talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
   talkBtn.disabled = true;
