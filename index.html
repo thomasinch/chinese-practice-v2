@@ -9,6 +9,11 @@
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
 
+/* collapsible header */
+#header { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; max-height: 1000px; }
+#header.collapsed { max-height: 0; opacity: 0; pointer-events: none; }
+#toggleHeader { display: none; position: fixed; top: 10px; right: 10px; font-size: 1.5em; cursor: pointer; }
+
 /* conversation transcript box */
 #transcript {
   border: 1px solid #ccc;
@@ -77,6 +82,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 </style>
 </head>
 <body>
+<div id="header">
 <h1>Chinese Conversation Practice</h1>
 <label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
 <!-- practice scenario description -->
@@ -103,6 +109,8 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 - Asking for recommendations"></textarea><br>
 <!-- start or end the session -->
 <button id="startStop">Go</button>
+</div>
+<button id="toggleHeader">▼</button>
 
 <!-- conversation transcript -->
 <div id="transcript"></div>

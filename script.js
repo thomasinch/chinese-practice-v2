@@ -21,6 +21,8 @@ const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
 const repeatBtn = document.getElementById('repeatButton');
 const translateBtn = document.getElementById('translateButton');
+const headerDiv = document.getElementById('header');
+const toggleHeader = document.getElementById('toggleHeader');
 let lastAssistantText = '';
 
 // keep transcript scrolled to bottom
@@ -48,6 +50,12 @@ startStopBtn.addEventListener('click', () => {
   } else {
     stopConversation();
   }
+});
+
+// expand hidden header when arrow clicked
+toggleHeader.addEventListener('click', () => {
+  headerDiv.classList.remove('collapsed');
+  toggleHeader.style.display = 'none';
 });
 
 // begin recording when holding the button
@@ -138,6 +146,8 @@ async function startConversation() {
     return;
   }
   running = true;
+  headerDiv.classList.add('collapsed');
+  toggleHeader.style.display = 'block';
   startStopBtn.textContent = 'Stop';
   transcriptDiv.textContent = '';
   repeatBtn.disabled = true;
@@ -158,6 +168,8 @@ function stopConversation() {
   if (recording) {
     mediaRecorder.stop();
   }
+  headerDiv.classList.remove('collapsed');
+  toggleHeader.style.display = 'none';
   startStopBtn.textContent = 'Go';
   repeatBtn.disabled = true;
   translateBtn.disabled = true;
