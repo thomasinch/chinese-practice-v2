@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Conversation Practice</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+#transcript { border: 1px solid #ccc; padding: 10px; height: 200px; width: 100%; overflow-y: auto; white-space: pre-wrap; }
+#recordButton { margin-left: 10px; }
+</style>
+</head>
+<body>
+<h1>Chinese Conversation Practice</h1>
+<label>OpenAI API Key: <input type="password" id="apiKey"></label><br><br>
+<textarea id="scenario" rows="3" cols="60" placeholder="Describe your practice scenario here..."></textarea><br>
+<button id="startStop">Go</button>
+<button id="recordButton" disabled>Record</button>
+<div id="transcript"></div>
+<audio id="ttsAudio"></audio>
+<script src="script.js"></script>
+</body>
+</html>
