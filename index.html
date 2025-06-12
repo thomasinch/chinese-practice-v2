@@ -44,6 +44,30 @@ body { font-family: Arial, sans-serif; margin: 20px; }
   margin-top: 10px;
   margin-right: 10px;
 }
+#translateButton {
+  /* english button style */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background-color: #FFEB3B;
+  color: black;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+#repeatButton:disabled {
+  background-color: grey;
+}
+#repeatButton:active, #translateButton:active {
+  transform: scale(0.95);
+}
+#controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
 #talkButton.holding {
   /* button pressed state */
   background-color: #45A049;
@@ -82,10 +106,14 @@ body { font-family: Arial, sans-serif; margin: 20px; }
 
 <!-- conversation transcript -->
 <div id="transcript"></div>
-<!-- replay last teacher reply -->
-<button id="repeatButton" disabled>请再说一次</button>
-<!-- hold to record your voice -->
-<button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
+<div id="controls">
+  <!-- hold to record your voice -->
+  <button id="talkButton" disabled>说话时按住 (Press and hold while speaking)</button>
+  <!-- replay last teacher reply -->
+  <button id="repeatButton" disabled>请再说一次</button>
+  <!-- show english translation -->
+  <button id="translateButton" disabled>看看英文</button>
+</div>
 
 <audio id="ttsAudio"></audio>
 <script src="script.js"></script>
