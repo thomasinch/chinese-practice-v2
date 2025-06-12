@@ -17,6 +17,7 @@ const talkBtn = document.getElementById('talkButton');
 const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
 const repeatBtn = document.getElementById('repeatButton');
+const translateBtn = document.getElementById('translateButton');
 let lastAssistantText = '';
 
 // keep transcript scrolled to bottom
@@ -91,12 +92,38 @@ repeatBtn.addEventListener('click', async () => {
   }
 });
 
+// translate last teacher reply when clicked
+translateBtn.addEventListener('click', async () => {
+  const apiKey = apiKeyInput.value.trim();
+  if (lastAssistantText && apiKey) {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: 'Translate the following Chinese text to English succinctly.' },
+          { role: 'user', content: lastAssistantText }
+        ]
+      })
+    });
+    const data = await response.json();
+    const eng = data.choices[0].message.content.trim();
+    transcriptDiv.textContent += ` (${eng})`;
+    scrollTranscriptToBottom();
+  }
+});
+
 // enable mic after audio playback
 ttsAudio.addEventListener('ended', () => {
   if (running) {
     talkBtn.disabled = false;
     talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
     repeatBtn.disabled = false;
+    translateBtn.disabled = false;
   }
 });
 
@@ -111,6 +138,7 @@ async function startConversation() {
   startStopBtn.textContent = 'Stop';
   transcriptDiv.textContent = '';
   repeatBtn.disabled = true;
+  translateBtn.disabled = true;
   talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
   talkBtn.disabled = true;
   conversation = [
@@ -129,6 +157,7 @@ function stopConversation() {
   }
   startStopBtn.textContent = 'Go';
   repeatBtn.disabled = true;
+  translateBtn.disabled = true;
   talkBtn.disabled = true;
   talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
   console.log('Conversation stopped');
@@ -215,6 +244,7 @@ async function speakAssistantText(apiKey, text) {
   talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
   talkBtn.disabled = true;
   repeatBtn.disabled = true;
+  translateBtn.disabled = true;
   const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
     headers: {
