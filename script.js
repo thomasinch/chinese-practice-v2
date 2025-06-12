@@ -125,6 +125,7 @@ translateBtn.addEventListener('click', async () => {
     const eng = data.choices[0].message.content.trim();
     transcriptDiv.textContent += ` (${eng})`;
     scrollTranscriptToBottom();
+    translateBtn.disabled = true;
   }
 });
 
