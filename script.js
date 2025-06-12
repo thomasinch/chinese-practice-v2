@@ -8,7 +8,7 @@ const systemPrompt = `You are a friendly Chinese teacher named 小王. Hold conv
 const apiKeyInput = document.getElementById('apiKey');
 const scenarioInput = document.getElementById('scenario');
 const startStopBtn = document.getElementById('startStop');
-const recordBtn = document.getElementById('recordButton');
+const talkBtn = document.getElementById('talkButton');
 const transcriptDiv = document.getElementById('transcript');
 const ttsAudio = document.getElementById('ttsAudio');
 
@@ -20,17 +20,42 @@ startStopBtn.addEventListener('click', () => {
   }
 });
 
-recordBtn.addEventListener('click', () => {
-  if (!recording) {
+talkBtn.addEventListener('pointerdown', (e) => {
+  if (!talkBtn.disabled && !recording) {
     startRecording();
-  } else {
+  }
+});
+
+talkBtn.addEventListener('pointerup', (e) => {
+  if (recording) {
+    stopRecording();
+  }
+});
+
+talkBtn.addEventListener('pointerleave', (e) => {
+  if (recording) {
+    stopRecording();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !talkBtn.disabled && !recording) {
+    e.preventDefault();
+    startRecording();
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.code === 'Space' && recording) {
+    e.preventDefault();
     stopRecording();
   }
 });
 
 ttsAudio.addEventListener('ended', () => {
   if (running) {
-    recordBtn.disabled = false;
+    talkBtn.disabled = false;
+    talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
   }
 });
 
@@ -43,6 +68,8 @@ async function startConversation() {
   running = true;
   startStopBtn.textContent = 'Stop';
   transcriptDiv.textContent = '';
+  talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
+  talkBtn.disabled = true;
   conversation = [
     { role: 'system', content: systemPrompt },
     { role: 'user', content: scenarioInput.value.trim() }
@@ -57,14 +84,15 @@ function stopConversation() {
     mediaRecorder.stop();
   }
   startStopBtn.textContent = 'Go';
-  recordBtn.disabled = true;
+  talkBtn.disabled = true;
+  talkBtn.textContent = '说话时按住 (Press and hold while speaking)';
   console.log('Conversation stopped');
 }
 
 async function startRecording() {
   if (!running) return;
-  recordBtn.textContent = 'Stop Recording';
-  recordBtn.disabled = false;
+  talkBtn.textContent = '现在讲 (Speak now)';
+  talkBtn.classList.add('holding');
   recording = true;
   audioChunks = [];
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -83,10 +111,11 @@ async function startRecording() {
 
 function stopRecording() {
   if (!recording) return;
-  recordBtn.textContent = 'Record';
+  talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
+  talkBtn.classList.remove('holding');
   recording = false;
   mediaRecorder.stop();
-  recordBtn.disabled = true;
+  talkBtn.disabled = true;
 }
 
 async function sendUserAudio(blob) {
@@ -129,6 +158,8 @@ async function getAssistantResponse(apiKey) {
 }
 
 async function speakAssistantText(apiKey, text) {
+  talkBtn.textContent = '老师正在讲话 (Teacher is speaking)...';
+  talkBtn.disabled = true;
   const ttsResponse = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
     headers: {
