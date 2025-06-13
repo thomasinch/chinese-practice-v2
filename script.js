@@ -58,9 +58,10 @@ startStopBtn.addEventListener('click', () => {
   }
 });
 
-// begin recording when holding the button
+// begin recording while pointer is held down
 talkBtn.addEventListener('pointerdown', (e) => {
   if (!talkBtn.disabled && !recording) {
+    talkBtn.setPointerCapture(e.pointerId);
     startRecording();
   }
 });
@@ -68,12 +69,13 @@ talkBtn.addEventListener('pointerdown', (e) => {
 // stop recording when released
 talkBtn.addEventListener('pointerup', (e) => {
   if (recording) {
+    talkBtn.releasePointerCapture(e.pointerId);
     stopRecording();
   }
 });
 
-// cancel if pointer leaves button
-talkBtn.addEventListener('pointerleave', (e) => {
+// handle unexpected pointer cancellation
+talkBtn.addEventListener('pointercancel', (e) => {
   if (recording) {
     stopRecording();
   }
